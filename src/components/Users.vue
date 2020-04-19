@@ -9,16 +9,10 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12">
-          <form class="mb-3">
-            <div class="form-row">
+          <form class="mb-3" v-on:submit="searchUser">
+            <div class="form-row text-center">
               <div class="col">
-                <input type="text" class="form-control" placeholder="Search by first name." v-model="filter.first_name">
-              </div>
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Search by last name." v-model="filter.last_name">
-              </div>
-              <div class="col">
-                <input type="text" class="form-control" placeholder="Search by email." v-model="filter.email">
+                <input type="text" class="form-control" placeholder="Search..." v-model="search">
               </div>
             </div>
           </form>
@@ -29,9 +23,33 @@
             <table class="table table-striped mb-5">
               <thead class="thead-dark">
                 <tr>
-                  <th scope="col">First Name</th>
-                  <th scope="col">Last Name</th>
-                  <th scope="col">Email</th>
+                  <th scope="col">
+                    First Name
+                    <button v-on:click="sortFirstName('asc')" class="btn btn-light btn-sm mx-1">
+                      A - Z
+                    </button>
+                    <button v-on:click="sortFirstName('desc')" class="btn btn-light btn-sm mx-1">
+                      Z - A
+                    </button>
+                  </th>
+                  <th scope="col">
+                    Last Name
+                    <button v-on:click="sortLastName('asc')" class="btn btn-light btn-sm mx-1">
+                      A - Z
+                    </button>
+                    <button v-on:click="sortLastName('desc')" class="btn btn-light btn-sm mx-1">
+                      Z - A
+                    </button>
+                  </th>
+                  <th scope="col">
+                    Email
+                    <button v-on:click="sortEmail('asc')" class="btn btn-light btn-sm mx-1">
+                      A - Z
+                    </button>
+                    <button v-on:click="sortEmail('desc')" class="btn btn-light btn-sm mx-1">
+                      Z - A
+                    </button>
+                  </th>
                   <th scope="col"></th>
                 </tr>
               </thead>
@@ -67,7 +85,7 @@ export default {
     return {
       api: 'http://localhost:3000/users',
       users: [],
-      filter: [],
+      search: '',
       alert: '',
     }
   },
@@ -95,6 +113,31 @@ export default {
               return i;
           }
       }
+    },
+    searchUser(e) {
+      e.preventDefault();
+      this.$http.get(this.api + '?q=' + this.search)
+        .then(function(response){
+          this.users = response.body;
+        });
+    },
+    sortFirstName(sort) {
+      this.$http.get(this.api + '?_sort=first_name&_order=' + sort)
+        .then(function(response){
+          this.users = response.body;
+        });
+    },
+    sortLastName(sort) {
+      this.$http.get(this.api + '?_sort=last_name&_order=' + sort)
+        .then(function(response){
+          this.users = response.body;
+        });
+    },
+    sortEmail(sort) {
+      this.$http.get(this.api + '?_sort=email&_order=' + sort)
+        .then(function(response){
+          this.users = response.body;
+        });
     }
   },
   created: function(){

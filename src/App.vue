@@ -24,6 +24,8 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.navbar-dark .navbar-nav .nav-link.router-link-exact-active {
+    color: #fff;
+}
 </style>
